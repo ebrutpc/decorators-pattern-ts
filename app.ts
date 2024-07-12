@@ -53,21 +53,36 @@ function reverse(target: any, propertKey: string, descriptor: PropertyDescriptor
     }
 }
 
-function join(target: any, propertKey: string, descriptor: PropertyDescriptor){
-    const originalMethod = descriptor.value;
+// function join(target: any, propertKey: string, descriptor: PropertyDescriptor){
+//     const originalMethod = descriptor.value;
 
-    descriptor.value = function(...args: any[]){
-        const [arg] = args;
-        const argJoined = arg.join('')
-        originalMethod.apply(this, [argJoined]);
+//     descriptor.value = function(...args: any[]){
+//         const [arg] = args;
+//         const argJoined = arg.join('')
+//         originalMethod.apply(this, [argJoined]);
+//     }
+// }
+
+
+function join(char: string) {
+    return (target: any, propertKey: string, descriptor: PropertyDescriptor) => {
+        const originalMethod = descriptor.value;
+    
+        descriptor.value = function(...args: any[]){
+            const [arg] = args;
+            const argJoined = arg.join(char)
+            originalMethod.apply(this, [argJoined]);
+        }
     }
 }
+
 
 
 class StringManager {
     @split
     @reverse
-    @join
+   // @join // without parameter
+   @join('') // with parameter
     print(str: string){
         // 1. split 
         console.log(str);
@@ -75,4 +90,4 @@ class StringManager {
 }
 
 const stringManager = new StringManager()
-stringManager.print('urbe');
+stringManager.print('');
